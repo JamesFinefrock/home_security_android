@@ -1,7 +1,6 @@
 package com.finefrock.james.security;
 
 import android.os.Bundle;
-import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -9,20 +8,19 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private TextView mTextMessage;
-    private ArrayList<Door> doors = new ArrayList<>();
+    private ArrayList<Door> doors;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -63,11 +61,12 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
+                doors = new ArrayList<>();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Door temp = snapshot.getValue(Door.class);
                     doors.add(temp);
-                    Log.w(TAG, "test");
                 }
+                Collections.sort(doors, new Door.DoorComparator());
             }
 
             @Override
