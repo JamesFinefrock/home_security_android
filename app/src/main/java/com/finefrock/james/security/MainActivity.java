@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private TextView mTextMessage;
-    private ArrayList<Door> doors;
+    private ArrayList<SecuritySwitch> securitySwitches;
     private DatabaseReference dbRef;
     ValueEventListener eventListener;
 
@@ -60,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         initChannels(this.getBaseContext());
-        FirebaseMessaging.getInstance().subscribeToTopic("security");
+        FirebaseMessaging.getInstance().subscribeToTopic(getResources().getString(R.string.fcm_topic));
 
         // Create reference to the database
-        dbRef = FirebaseDatabase.getInstance().getReference("door_sensors");
+        dbRef = FirebaseDatabase.getInstance().getReference(getResources().getString(R.string.fdb_reference));
 
         // Create db event listener
         eventListener = new ValueEventListener() {
@@ -71,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                doors = new ArrayList<>();
+                securitySwitches = new ArrayList<>();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Door temp = snapshot.getValue(Door.class);
-                    doors.add(temp);
+                    SecuritySwitch temp = snapshot.getValue(SecuritySwitch.class);
+                    securitySwitches.add(temp);
                 }
-                Collections.sort(doors, new Door.DoorComparator());
+                Collections.sort(securitySwitches, new SecuritySwitch.SecuritySwitchComparator());
             }
 
             @Override
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel("switches",
+        NotificationChannel channel = new NotificationChannel(getResources().getString(R.string.notification_channel),
                 "Security Switch Notifications",
                 NotificationManager.IMPORTANCE_HIGH);
         channel.setDescription("Notification Channel for Security Switches");

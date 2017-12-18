@@ -47,10 +47,9 @@ public class DoorSensorFirebaseService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        String channelId = "switches";
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
+                new NotificationCompat.Builder(this, getResources().getString(R.string.notification_channel))
                         .setSmallIcon(R.drawable.ic_notifications_black_24dp)
                         .setContentTitle("FCM Message")
                         .setContentText(messageBody)

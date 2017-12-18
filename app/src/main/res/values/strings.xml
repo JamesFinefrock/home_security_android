@@ -3,4 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="notification_channel">switches</string>
+    <string name="fcm_topic">security</string>
+    <string name="fdb_reference">door_sensors</string>
 </resources>
