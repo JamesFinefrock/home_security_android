@@ -1,18 +1,12 @@
 package com.finefrock.james.security;
 
-import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -33,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     private ArrayList<Door> doors;
+    private DatabaseReference dbRef;
+    ValueEventListener eventListener;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -59,20 +55,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initChannels(this.getBaseContext());
-
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Create reference to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("door_sensors");
-
+        initChannels(this.getBaseContext());
         FirebaseMessaging.getInstance().subscribeToTopic("security");
 
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+        // Create reference to the database
+        dbRef = FirebaseDatabase.getInstance().getReference("door_sensors");
+
+        // Create db event listener
+        eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -83,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
                     doors.add(temp);
                 }
                 Collections.sort(doors, new Door.DoorComparator());
-                sensorNotification(getBaseContext());
             }
 
             @Override
@@ -91,50 +84,34 @@ public class MainActivity extends AppCompatActivity {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
-        });
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        dbRef.addValueEventListener(eventListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        dbRef.removeEventListener(eventListener);
     }
 
     protected void initChannels(Context context) {
         if (Build.VERSION.SDK_INT < 26) {
             return;
         }
+
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel("default",
-                "Sensor Notifications",
+        NotificationChannel channel = new NotificationChannel("switches",
+                "Security Switch Notifications",
                 NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription("Notification Channel for Sensors");
+        channel.setDescription("Notification Channel for Security Switches");
         notificationManager.createNotificationChannel(channel);
-    }
-
-@TargetApi(16)
-    protected void sensorNotification(Context context) {
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "default").setSmallIcon(R.drawable.ic_notifications_black_24dp).setContentTitle("Test Notification").setContentText("Text is here");
-
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
-
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your app to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-// Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        notificationBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-// mNotificationId is a unique integer your app uses to identify the
-// notification. For example, to cancel the notification, you can pass its ID
-// number to NotificationManager.cancel().
-        mNotificationManager.notify(1, notificationBuilder.build());
     }
 }
