@@ -1,5 +1,6 @@
 package com.finefrock.james.security;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -10,6 +11,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,15 +24,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private TextView mTextMessage;
-    private ArrayList<SecuritySwitch> securitySwitches;
+    private ListView mList;
+    private List<SecuritySwitch> securitySwitches;
     private DatabaseReference dbRef;
     ValueEventListener eventListener;
+    ArrayAdapter<SecuritySwitch> listAdaper;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -37,10 +45,13 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    mTextMessage.setVisibility(View.INVISIBLE);
+                    mList.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
+                    mList.setVisibility(View.INVISIBLE);
+                    mTextMessage.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
@@ -56,8 +67,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mTextMessage = (TextView) findViewById(R.id.message);
+        mList = (ListView) findViewById(R.id.switch_list);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        securitySwitches = new ArrayList<>();
+        listAdaper = new ArrayAdapter<SecuritySwitch>(this, android.R.layout.simple_list_item_1, securitySwitches);
+        mList.setAdapter(listAdaper);
 
         initChannels(this.getBaseContext());
         FirebaseMessaging.getInstance().subscribeToTopic(getResources().getString(R.string.fcm_topic));
@@ -71,12 +87,13 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                securitySwitches = new ArrayList<>();
+                securitySwitches.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     SecuritySwitch temp = snapshot.getValue(SecuritySwitch.class);
                     securitySwitches.add(temp);
                 }
                 Collections.sort(securitySwitches, new SecuritySwitch.SecuritySwitchComparator());
+                listAdaper.notifyDataSetChanged();
             }
 
             @Override

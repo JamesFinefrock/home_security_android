@@ -27,4 +27,9 @@ public class SecuritySwitch {
         this.name = name;
         this.open_status = open_status;
     }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + "\nStatus: " + open_status;
+    }
 }
