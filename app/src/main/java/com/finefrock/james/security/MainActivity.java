@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -66,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         // Create reference to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("door_sensors");
+
+        FirebaseMessaging.getInstance().subscribeToTopic("security");
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
