@@ -16,20 +16,20 @@ public class SecuritySwitch {
 
     public int id;
     public String name;
-    public boolean open_status;
+    public boolean open;
 
     private SecuritySwitch() {
 
     }
 
-    public SecuritySwitch(long id, String name, Boolean open_status) {
+    public SecuritySwitch(long id, String name, Boolean open) {
         this.id = (int) id;
         this.name = name;
-        this.open_status = open_status;
+        this.open = open;
     }
 
     @Override
     public String toString() {
-        return "Name: " + name + "\nStatus: " + open_status;
+        return "Name: " + name + "\nOpen: " + open;
     }
 }
