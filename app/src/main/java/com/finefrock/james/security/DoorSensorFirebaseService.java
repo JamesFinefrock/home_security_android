@@ -1,5 +1,6 @@
 package com.finefrock.james.security;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -60,6 +61,10 @@ public class DoorSensorFirebaseService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        Notification notification = notificationBuilder.build();
+        notification.flags = Notification.FLAG_INSISTENT | Notification.FLAG_AUTO_CANCEL;
+        notification.defaults = Notification.DEFAULT_ALL;
+
+        notificationManager.notify(0 /* ID of notification */, notification);
     }
 }

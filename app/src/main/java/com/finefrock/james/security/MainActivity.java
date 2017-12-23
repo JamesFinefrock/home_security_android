@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 "Security Switch Notifications",
                 NotificationManager.IMPORTANCE_HIGH);
         channel.setDescription("Notification Channel for Security Switches");
+        channel.enableVibration(true);
         notificationManager.createNotificationChannel(channel);
     }
 }
