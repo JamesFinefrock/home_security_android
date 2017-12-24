@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     private ListView mList;
+    private LinearLayout main_layout;
     private List<SecuritySwitch> securitySwitches;
     private DatabaseReference dbRef;
     ValueEventListener eventListener;
@@ -46,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     mTextMessage.setVisibility(View.INVISIBLE);
-                    mList.setVisibility(View.VISIBLE);
+                    main_layout.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
-                    mList.setVisibility(View.INVISIBLE);
+                    main_layout.setVisibility(View.INVISIBLE);
                     mTextMessage.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_notifications:
@@ -67,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mTextMessage = (TextView) findViewById(R.id.message);
-        mList = (ListView) findViewById(R.id.switch_list);
+        main_layout = (LinearLayout) findViewById(R.id.main_linear_layout);
+        mList = findViewById(R.id.switch_list);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
