@@ -39,7 +39,9 @@ public class DoorSensorFirebaseService extends FirebaseMessagingService {
         }
 
         preferences = getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE);
-        if(preferences.getBoolean(getString(R.string.notification_status), true)) {
+        int alarmStatus = preferences.getInt(getString(R.string.notification_status), 0);
+
+        if(alarmStatus == 0) {
             sendNotification(remoteMessage.getData().toString());
         }
 

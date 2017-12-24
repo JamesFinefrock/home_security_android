@@ -30,17 +30,35 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Alerts for Switches Opening: " />
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <ToggleButton
-                android:id="@+id/notification_toggle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ToggleButton" />
+                <RadioButton
+                    android:id="@+id/alarm_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Alarms On"
+                    android:onClick="onRadioButtonClicked"/>/>
+
+                <RadioButton
+                    android:id="@+id/alarm_off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Alarm Off"
+                    android:onClick="onRadioButtonClicked"/>/>
+
+                <RadioButton
+                    android:id="@+id/alarm_scheduled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Alarms on Schedule"
+                    android:onClick="onRadioButtonClicked"/>/>
+            </RadioGroup>
+
         </LinearLayout>
 
         <ListView

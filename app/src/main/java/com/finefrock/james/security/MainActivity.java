@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextMessage;
     private ListView mList;
     private ToggleButton mToggleButton;
+    private RadioButton mAlarmOn;
+    private RadioButton mAlarmOff;
+    private RadioButton mAlarmScheduled;
     private LinearLayout main_layout;
     private List<SecuritySwitch> securitySwitches;
     private DatabaseReference dbRef;
@@ -75,16 +79,13 @@ public class MainActivity extends AppCompatActivity {
 
         preferences = this.getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE);
 
-        mToggleButton = (ToggleButton) findViewById(R.id.notification_toggle);
-        mToggleButton.setChecked(preferences.getBoolean(getString(R.string.notification_status), true));
-        mToggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(getString(R.string.notification_status), mToggleButton.isChecked());
-                editor.apply();
-            }
-        });
+        mAlarmOn = (RadioButton) findViewById(R.id.alarm_on);
+        mAlarmOff = (RadioButton) findViewById(R.id.alarm_off);
+        mAlarmScheduled = (RadioButton) findViewById(R.id.alarm_scheduled);
+
+        mAlarmOn.setChecked(preferences.getInt(getString(R.string.notification_status), 0) == 0);
+        mAlarmOff.setChecked(preferences.getInt(getString(R.string.notification_status), 0) == 1);
+        mAlarmScheduled.setChecked(preferences.getInt(getString(R.string.notification_status), 0) == 2);
 
         mTextMessage = (TextView) findViewById(R.id.message);
         main_layout = (LinearLayout) findViewById(R.id.main_linear_layout);
@@ -123,6 +124,31 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         };
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        int status = 0;
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.alarm_on:
+                if (checked)
+                    status = 0;
+                break;
+            case R.id.alarm_off:
+                if (checked)
+                    status = 1;
+                break;
+            case R.id.alarm_scheduled:
+                if (checked)
+                    status = 2;
+                break;
+        }
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(getString(R.string.notification_status), status);
+        editor.commit();
     }
 
     @Override
