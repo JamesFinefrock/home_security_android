@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -19,6 +20,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class DoorSensorFirebaseService extends FirebaseMessagingService {
     private static final String TAG = "DoorSensorFirebaseServi";
+    private SharedPreferences preferences;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -36,7 +38,10 @@ public class DoorSensorFirebaseService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
-        sendNotification(remoteMessage.getData().toString());
+        preferences = getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE);
+        if(preferences.getBoolean(getString(R.string.notification_status), true)) {
+            sendNotification(remoteMessage.getData().toString());
+        }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.

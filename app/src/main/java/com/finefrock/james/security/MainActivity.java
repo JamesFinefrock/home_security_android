@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,17 +30,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private TextView mTextMessage;
     private ListView mList;
+    private ToggleButton mToggleButton;
     private LinearLayout main_layout;
     private List<SecuritySwitch> securitySwitches;
     private DatabaseReference dbRef;
     ValueEventListener eventListener;
     ArrayAdapter<SecuritySwitch> listAdaper;
+    private SharedPreferences preferences;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -67,6 +72,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        preferences = this.getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE);
+
+        mToggleButton = (ToggleButton) findViewById(R.id.notification_toggle);
+        mToggleButton.setChecked(preferences.getBoolean(getString(R.string.notification_status), true));
+        mToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean(getString(R.string.notification_status), mToggleButton.isChecked());
+                editor.apply();
+            }
+        });
 
         mTextMessage = (TextView) findViewById(R.id.message);
         main_layout = (LinearLayout) findViewById(R.id.main_linear_layout);

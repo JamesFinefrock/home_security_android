@@ -6,4 +6,8 @@
     <string name="notification_channel">switches</string>
     <string name="fcm_topic">security</string>
     <string name="fdb_reference">door_sensors</string>
+    <string name="preferences_file">com.finefrock.james.PREFERENCES_FILE</string>
+    <string name="notification_start_time">notification_start_time</string>
+    <string name="notification_end_time">notification_end_time</string>
+    <string name="notification_status">notification_status</string>
 </resources>
