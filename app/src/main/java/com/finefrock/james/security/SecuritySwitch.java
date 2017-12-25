@@ -36,7 +36,7 @@ public class SecuritySwitch {
     public String toString() {
         long milliseconds = Long.valueOf(last_opened + 18000)*1000;// its need to be in milisecond
         Date date = new java.util.Date(milliseconds);
-        String dateString = new SimpleDateFormat("hh:mma MM dd, yyyy ").format(milliseconds);
+        String dateString = new SimpleDateFormat("hh:mm a MM dd, yyyy ").format(milliseconds);
 
         return "Name: " + name + "\nOpen: " + open + "\nLast Opened: " + dateString;
     }

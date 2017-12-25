@@ -23,108 +23,107 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ScrollView>
-
-
-    <LinearLayout
-        android:id="@+id/main_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/main_linear_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/alarm_on"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="Alarms On" />/>
-
-                <RadioButton
-                    android:id="@+id/alarm_off"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="Alarms Off" />/>
-
-                <RadioButton
-                    android:id="@+id/alarm_scheduled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="Alarms on Schedule" />/>
-            </RadioGroup>
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/alarm_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="onRadioButtonClicked"
+                        android:text="Alarms On" />/>
+
+                    <RadioButton
+                        android:id="@+id/alarm_off"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="onRadioButtonClicked"
+                        android:text="Alarms Off" />/>
+
+                    <RadioButton
+                        android:id="@+id/alarm_scheduled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="onRadioButtonClicked"
+                        android:text="Alarms on Schedule" />/>
+                </RadioGroup>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/start_time_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Start Time" />
-
-                    <TextView
-                        android:id="@+id/start_time_textview"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="TextView" />
+                        android:orientation="horizontal">
 
-                </LinearLayout>
+                        <Button
+                            android:id="@+id/start_time_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Start Time" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/start_time_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="TextView" />
 
-                    <Button
-                        android:id="@+id/stop_time_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Stop Time" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/stop_time_textview"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="TextView" />
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/stop_time_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Stop Time" />
+
+                        <TextView
+                            android:id="@+id/stop_time_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="TextView" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
+            <ListView
+                android:id="@+id/switch_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:drawSelectorOnTop="false" />
         </LinearLayout>
+    </ScrollView>
 
-        <ListView
-            android:id="@+id/switch_list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:drawSelectorOnTop="false" />
-    </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
