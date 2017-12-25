@@ -14,6 +14,11 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by james on 12/18/17.
  */
@@ -43,6 +48,10 @@ public class DoorSensorFirebaseService extends FirebaseMessagingService {
 
         if(alarmStatus == 0) {
             sendNotification(remoteMessage.getData().toString());
+        } else if(alarmStatus == 2) {
+            if(isInTimeRange()) {
+                sendNotification(remoteMessage.getData().toString());
+            }
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -73,5 +82,36 @@ public class DoorSensorFirebaseService extends FirebaseMessagingService {
         notification.defaults = Notification.DEFAULT_ALL;
 
         notificationManager.notify(0 /* ID of notification */, notification);
+    }
+
+    private boolean isInTimeRange() {
+        try {
+            String string1 = preferences.getString(getString(R.string.notification_start_time), "0:00");
+            Date time1 = new SimpleDateFormat("HH:mm").parse(string1);
+
+            String string2 = preferences.getString(getString(R.string.notification_end_time), "0:00");
+            Date time2 = new SimpleDateFormat("HH:mm").parse(string2);
+
+            if(time2.before(time1)) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(time2);
+                cal.add(Calendar.DATE, 1); //minus number would decrement the days
+                time2 = cal.getTime();
+            }
+
+            Calendar calendar3 = Calendar.getInstance();
+            Date x = calendar3.getTime();
+            Date time3 = new SimpleDateFormat("HH:mm").parse(x.getHours() + ":" + x.getMinutes());
+
+            if (time3.after(time1) && time3.before(time2)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 }

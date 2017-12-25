@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
             final Date dateObj = sdf.parse(time);
-            return new SimpleDateFormat("K:mm a").format(dateObj);
+            return new SimpleDateFormat("h:mm a").format(dateObj);
         } catch (ParseException e) {
             e.printStackTrace();
         }
