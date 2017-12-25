@@ -92,16 +92,26 @@ public class DoorSensorFirebaseService extends FirebaseMessagingService {
             String string2 = preferences.getString(getString(R.string.notification_end_time), "0:00");
             Date time2 = new SimpleDateFormat("HH:mm").parse(string2);
 
+            boolean switched = false;
+
             if(time2.before(time1)) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(time2);
                 cal.add(Calendar.DATE, 1); //minus number would decrement the days
                 time2 = cal.getTime();
+                switched = true;
             }
 
             Calendar calendar3 = Calendar.getInstance();
             Date x = calendar3.getTime();
             Date time3 = new SimpleDateFormat("HH:mm").parse(x.getHours() + ":" + x.getMinutes());
+
+            if(time3.getHours() < 12 && switched) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(time3);
+                cal.add(Calendar.DATE, 1); //minus number would decrement the days
+                time3 = cal.getTime();
+            }
 
             if (time3.after(time1) && time3.before(time2)) {
                 return true;
