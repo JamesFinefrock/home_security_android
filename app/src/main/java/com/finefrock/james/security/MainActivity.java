@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,6 +47,7 @@ import java.util.prefs.Preferences;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
+    private FirebaseAuth mAuth;
     private TextView mTextMessage;
     private ListView mList;
     private ToggleButton mToggleButton;
@@ -89,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signInAnonymously();
 
         preferences = this.getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE);
 
