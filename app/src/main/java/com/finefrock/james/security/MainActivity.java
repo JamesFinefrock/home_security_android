@@ -1,10 +1,11 @@
 package com.finefrock.james.security;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,10 +15,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.DataSnapshot;
@@ -27,9 +30,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.w3c.dom.Text;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -42,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton mAlarmOn;
     private RadioButton mAlarmOff;
     private RadioButton mAlarmScheduled;
+    private Button mStartTimeButton;
+    private Button mStopTimeButton;
+    private TextView mStartTimeTV;
+    private TextView mStopTimeTV;
     private LinearLayout main_layout;
     private List<SecuritySwitch> securitySwitches;
     private DatabaseReference dbRef;
@@ -78,6 +91,52 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         preferences = this.getSharedPreferences(getString(R.string.preferences_file), Context.MODE_PRIVATE);
+
+        mStartTimeButton = (Button) findViewById(R.id.start_time_button);
+        mStopTimeButton = (Button) findViewById(R.id.stop_time_button);
+        mStartTimeTV = (TextView) findViewById(R.id.start_time_textview);
+        mStopTimeTV = (TextView) findViewById(R.id.stop_time_textview);
+
+        mStartTimeTV.setText(getTimeFromString(preferences.getString(getString(R.string.notification_start_time), "0:00")));
+        mStopTimeTV.setText(getTimeFromString(preferences.getString(getString(R.string.notification_end_time), "0:00")));
+
+        mStartTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int min) {
+                        String time = hour + ":" + min;
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(getString(R.string.notification_start_time), time);
+                        editor.commit();
+                        mStartTimeTV.setText(getTimeFromString(time));
+                    }
+                }, 0, 0, false);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
+
+        mStopTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int min) {
+                        String time = hour + ":" + min;
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(getString(R.string.notification_end_time), time);
+                        editor.commit();
+                        mStopTimeTV.setText(getTimeFromString(time));
+                    }
+                }, 0, 0, false);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
 
         mAlarmOn = (RadioButton) findViewById(R.id.alarm_on);
         mAlarmOff = (RadioButton) findViewById(R.id.alarm_off);
@@ -124,6 +183,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         };
+    }
+
+    private String getTimeFromString(String time) {
+        try {
+            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+            final Date dateObj = sdf.parse(time);
+            return new SimpleDateFormat("K:mm a").format(dateObj);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public void onRadioButtonClicked(View view) {

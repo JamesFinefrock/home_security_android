@@ -19,11 +19,18 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ScrollView>
+
+
     <LinearLayout
         android:id="@+id/main_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -39,25 +46,76 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Alarms On"
-                    android:onClick="onRadioButtonClicked"/>/>
+                    android:onClick="onRadioButtonClicked"
+                    android:text="Alarms On" />/>
 
                 <RadioButton
                     android:id="@+id/alarm_off"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Alarm Off"
-                    android:onClick="onRadioButtonClicked"/>/>
+                    android:onClick="onRadioButtonClicked"
+                    android:text="Alarms Off" />/>
 
                 <RadioButton
                     android:id="@+id/alarm_scheduled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Alarms on Schedule"
-                    android:onClick="onRadioButtonClicked"/>/>
+                    android:onClick="onRadioButtonClicked"
+                    android:text="Alarms on Schedule" />/>
             </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/start_time_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Start Time" />
+
+                    <TextView
+                        android:id="@+id/start_time_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="TextView" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/stop_time_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Stop Time" />
+
+                    <TextView
+                        android:id="@+id/stop_time_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="TextView" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -65,11 +123,8 @@
             android:id="@+id/switch_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:drawSelectorOnTop="false"
-            />
+            android:drawSelectorOnTop="false" />
     </LinearLayout>
-
-
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
